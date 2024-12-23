@@ -1,30 +1,28 @@
 <?php
-// Inclui arquivo de conexão com o banco
 require('conexao.php');
 
-// Pega o ID da cidade da URL e converte para inteiro (segurança)
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Verifica se o formulário foi enviado via POST
+// verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Escapa caracteres especiais para prevenir SQL Injection
+    // sql injection
     $nome = mysqli_real_escape_string($con, $_POST['nome']);
     $estado = mysqli_real_escape_string($con, $_POST['estado']);
     
-    // Query para atualizar os dados da cidade
+    // query para atualizar os dados da cidade
     $q = "UPDATE cidades SET nome = '$nome', estado = '$estado' WHERE id = $id";
     if (mysqli_query($con, $q)) {
-        // Se atualizou com sucesso, redireciona para página inicial
+
         header("Location: index.php");
         exit;
     }
 }
 
-// Busca os dados atuais da cidade
+// dados atuais da cidade
 $q = "SELECT * FROM cidades WHERE id = $id";
 $cidade = mysqli_fetch_assoc(mysqli_query($con, $q));
 
-// Busca lista de estados para o select
+// lista de estados para o select
 $q_estados = "SELECT * FROM estados ORDER BY nome";
 $estados = mysqli_query($con, $q_estados);
 ?>
@@ -32,27 +30,26 @@ $estados = mysqli_query($con, $q_estados);
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <!-- Configurações básicas da página -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Cidade</title>
-    <!-- Carregamento dos arquivos CSS e fontes -->
+
     <link rel="stylesheet" href="style.css?v=1">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <!-- Cabeçalho da página -->
+        <!-- cabeçalho -->
         <div class="edit-header">
             <h1>Editar Cidade</h1>
             <p class="subtitle">Atualize as informações da cidade</p>
         </div>
         
         <div class="form-container">
-            <!-- Formulário de edição -->
+            <!-- formulario para editar -->
             <form method="POST" class="form-padrao">
-                <!-- Campo para nome da cidade -->
+
                 <div class="form-group">
                     <label for="nome">
                         <i class="fas fa-city"></i> Nome da Cidade
@@ -65,7 +62,7 @@ $estados = mysqli_query($con, $q_estados);
                            required>
                 </div>
                 
-                <!-- Select para escolher o estado -->
+                <!-- escolhe o estado -->
                 <div class="form-group">
                     <label for="estado">
                         <i class="fas fa-map-marker-alt"></i> Estado
@@ -81,7 +78,6 @@ $estados = mysqli_query($con, $q_estados);
                     </select>
                 </div>
                 
-                <!-- Botões de ação do formulário -->
                 <div class="form-actions">
                     <button type="submit" class="btn-primary">
                         <i class="fas fa-save"></i> Salvar Alterações
@@ -92,14 +88,14 @@ $estados = mysqli_query($con, $q_estados);
                 </div>
             </form>
 
-            <!-- Zona de perigo - área para remoção da cidade -->
+            <!-- area para remoção da cidade -->
             <div class="danger-zone">
                 <div class="danger-header">
                     <i class="fas fa-exclamation-triangle"></i>
                     <h3>Zona de Perigo</h3>
                 </div>
                 <p>Atenção: A remoção de uma cidade é permanente e não pode ser desfeita.</p>
-                <!-- Formulário de remoção -->
+                <!-- formulario para remover a cidade -->
                 <form method="POST" 
                       action="remover_cidade.php" 
                       class="form-delete" 

@@ -1,22 +1,21 @@
 <?php
-// Inclui arquivo de conexão com o banco
 require('conexao.php');
 
-// Query para buscar estatísticas por categoria
-// Conta quantas melhorias existem em cada categoria
+// query que busca estatísticas por categoria
+// conta quantas melhorias existem em cada categoria
 $q_categorias = "SELECT categoria, COUNT(*) as total FROM melhorias GROUP BY categoria";
 $categorias = mysqli_query($con, $q_categorias);
 
-// Query para buscar estatísticas por cidade
-// Conta quantas melhorias cada cidade tem, incluindo cidades sem melhorias (LEFT JOIN)
+// busca estatísticas por cidade
+// conta quantas melhorias cada cidade tem, incluindo também as sem melhorias
 $q_cidades = "SELECT c.nome, COUNT(m.id) as total_melhorias 
               FROM cidades c 
               LEFT JOIN melhorias m ON c.id = m.id_cidade 
               GROUP BY c.id";
 $cidades = mysqli_query($con, $q_cidades);
 
-// Query para buscar as 10 melhorias mais votadas
-// Junta com a tabela de cidades para mostrar o nome da cidade
+// busca as 10 melhorias mais votadas
+// junta com a tabela de cidades para mostrar o nome da cidade
 $q_votadas = "SELECT m.*, c.nome as cidade 
               FROM melhorias m 
               JOIN cidades c ON m.id_cidade = c.id 
@@ -28,11 +27,10 @@ $mais_votadas = mysqli_query($con, $q_votadas);
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <!-- Configurações básicas da página -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios e Estatísticas</title>
-    <!-- Carregamento dos arquivos CSS e fontes -->
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -41,7 +39,7 @@ $mais_votadas = mysqli_query($con, $q_votadas);
     <div class="container">
         <h1>Relatórios e Estatísticas</h1>
         
-        <!-- Seção de estatísticas por categoria -->
+        <!-- estatísticas por categoria -->
         <section class="relatorio-section">
             <h2>Melhorias por Categoria</h2>
             <div class="stats-grid">
@@ -54,7 +52,7 @@ $mais_votadas = mysqli_query($con, $q_votadas);
             </div>
         </section>
         
-        <!-- Seção de estatísticas por cidade -->
+        <!-- estatísticas por cidade -->
         <section class="relatorio-section">
             <h2>Melhorias por Cidade</h2>
             <div class="stats-grid">
@@ -67,7 +65,7 @@ $mais_votadas = mysqli_query($con, $q_votadas);
             </div>
         </section>
         
-        <!-- Seção das melhorias mais votadas -->
+        <!-- melhorias mais votadas -->
         <section class="relatorio-section">
             <h2>Melhorias Mais Votadas</h2>
             <div class="top-melhorias">
@@ -81,7 +79,6 @@ $mais_votadas = mysqli_query($con, $q_votadas);
             </div>
         </section>
         
-        <!-- Botão para voltar à página inicial -->
         <a href="index.php" class="btn-voltar">Voltar para o Início</a>
     </div>
 </body>
